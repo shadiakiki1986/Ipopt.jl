@@ -31,6 +31,7 @@ end
 
 @testset "MathOptInterface" begin
     include("MOI_wrapper.jl")
+    include("MOI_nlp_nancallback.jl")
 end
 
 @testset "MathProgBase" begin
