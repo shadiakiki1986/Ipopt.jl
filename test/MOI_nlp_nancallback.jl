@@ -14,14 +14,20 @@ MOI.set(optimizer, MOI.RawParameter("fixed_variable_treatment"),
 
 const config = MOIT.TestConfig(atol=1e-4, rtol=1e-4,
                                optimal_status=MOI.LOCALLY_SOLVED)
-# DualObjectiveValue is not implemented, so Ipopt does not pass the tests that
-# query it.
-# TODO: Consider implementing DualObjectiveValue for purely linear problems.
-const config_no_duals = MOIT.TestConfig(atol=1e-4, rtol=1e-4, duals=false,
-                                        optimal_status=MOI.LOCALLY_SOLVED)
+
+const config_INF = MOIT.TestConfig(atol=1e-4, rtol=1e-4,
+                               optimal_status=MOI.NORM_LIMIT)
+
 
 MOI.empty!(optimizer)
 
-@testset "MOI NLP tests" begin
-    MOIT.nancb_test(optimizer, config)
+# Test doesn't work ATM
+#   MathOptInterface.UnsupportedAttribute{MathOptInterface.VariableName}: Attribute MathOptInterface.VariableName() is not supported by the model.
+#@testset "MOI NLP test max x" begin
+#    MOIT.max_x_is_inf(optimizer, config)
+#end
+
+# passes
+@testset "MOI NLP test max_x_is_inf" begin
+    MOIT.nancb_test(optimizer, config_INF)
 end
