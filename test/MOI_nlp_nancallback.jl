@@ -15,13 +15,17 @@ MOI.set(optimizer, MOI.RawParameter("fixed_variable_treatment"),
 const config = MOIT.TestConfig(atol=1e-4, rtol=1e-4,
                                optimal_status=MOI.LOCALLY_SOLVED)
 
-const config_INF = MOIT.TestConfig(atol=1e-4, rtol=1e-4,
+const config_NORMLIM = MOIT.TestConfig(atol=1e-4, rtol=1e-4,
                                optimal_status=MOI.NORM_LIMIT)
+
+const config_ITERLIM = MOIT.TestConfig(atol=1e-4, rtol=1e-4,
+                               optimal_status=MOI.ITERATION_LIMIT)
+
 
 
 MOI.empty!(optimizer)
 
-# Test doesn't work ATM
+# FIXME Test doesn't work ATM
 #   MathOptInterface.UnsupportedAttribute{MathOptInterface.VariableName}: Attribute MathOptInterface.VariableName() is not supported by the model.
 #@testset "MOI NLP test max x" begin
 #    MOIT.max_x_is_inf(optimizer, config)
@@ -29,5 +33,14 @@ MOI.empty!(optimizer)
 
 # passes
 @testset "MOI NLP test max_x_is_inf" begin
-    MOIT.nancb_test(optimizer, config_INF)
+    MOIT.nancb_test(optimizer, config_NORMLIM)
+end
+
+# passes
+@testset "MOI NLP test max_inv x_is_inf" begin
+    MOIT.nancb_test2(optimizer, config_ITERLIM)
+end
+
+@testset "MOI NLP test nan callbacks" begin
+    MOIT.nancb_test3(optimizer, config_ITERLIM)
 end
